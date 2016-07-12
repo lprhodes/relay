@@ -1,5 +1,6 @@
 [ignore]
 .*/__tests__/.*
+.*/**/*.native.js
 .*/node_modules/graphql/.*
 .*/react/node_modules/.*
 .*/react-static-container/node_modules/.*
@@ -31,4 +32,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(>=0\\.\\(2[0-7]\\|1[0-9]\\|[0-9
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 
 [version]
-^0.27.0
+^0.28.0
