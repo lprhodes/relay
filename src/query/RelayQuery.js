@@ -559,6 +559,25 @@ class RelayQueryRoot extends RelayQueryNode {
     return !!(this.__concreteNode__: ConcreteQuery).metadata.isPlural;
   }
 
+  cloneWithRoute(
+    children: NextChildren,
+    route: RelayMetaRoute
+  ): ?RelayQueryNode {
+    if (this.__route__ === route) {
+      return this.clone(children);
+    }
+    const clone = RelayQueryNode.create(
+      {
+        ...this.__concreteNode__,
+        name: route.name,
+      },
+      route,
+      this.__variables__
+    );
+    clone.__children__ = children;
+    return clone;
+  }
+
   equals(that: RelayQueryNode): boolean {
     if (this === that) {
       return true;

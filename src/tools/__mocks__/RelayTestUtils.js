@@ -121,7 +121,7 @@ const RelayTestUtils = {
     return reference;
   },
 
-  createCall(name, value) {
+  createCall(name, value, type) {
     const QueryBuilder = require('QueryBuilder');
 
     if (Array.isArray(value)) {
@@ -129,7 +129,7 @@ const RelayTestUtils = {
     } else if (value != null) {
       value = QueryBuilder.createCallValue(value);
     }
-    return QueryBuilder.createCall(name, value);
+    return QueryBuilder.createCall(name, value, type);
   },
 
   createContainerFragment(fragment) {
@@ -756,7 +756,7 @@ function prettifyQueryString(queryText, indentSize) {
       indent = indent.substr(0, indent.length - 2);
       output += '\n' + indent + '}';
     } else if (match[0] === ',') {
-      output += ',' + '\n' + indent;
+      output += ',\n' + indent;
     } else {
       output += match[0];
     }

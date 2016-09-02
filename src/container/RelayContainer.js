@@ -38,12 +38,13 @@ import type {
   Variables,
 } from 'RelayTypes';
 
+const areEqual = require('areEqual');
 const buildRQL = require('buildRQL');
 import type {RelayQLFragmentBuilder} from 'buildRQL';
 const filterObject = require('filterObject');
 const forEachObject = require('forEachObject');
+const {getComponentName, getReactComponent} = require('RelayContainerUtils');
 const invariant = require('invariant');
-const isReactComponent = require('isReactComponent');
 const isRelayEnvironment = require('isRelayEnvironment');
 const relayUnstableBatchedUpdates = require('relayUnstableBatchedUpdates');
 const shallowEqual = require('shallowEqual');
@@ -220,6 +221,7 @@ function createContainerComponent(
             fragmentName
           );
           const dataIDs = [];
+          // $FlowFixMe(>=0.31.0)
           queryData.forEach((data, ii) => {
             const dataID = RelayRecord.getDataIDForObject(data);
             if (dataID) {
@@ -882,7 +884,7 @@ function resetPropOverridesForVariables(
 ): Variables {
   const initialVariables = spec.initialVariables;
   for (const key in initialVariables) {
-    if (key in props && props[key] !== variables[key]) {
+    if (key in props && !areEqual(props[key], variables[key])) {
       return initialVariables;
     }
   }
@@ -1012,30 +1014,6 @@ function validateSpec(
   });
 }
 
-function getReactComponent(
-  Component: ReactClass<any>
-): ?ReactClass<any> {
-  if (isReactComponent(Component)) {
-    return (Component: any);
-  } else {
-    return null;
-  }
-}
-
-function getComponentName(Component: ReactClass<any>): string {
-  let name;
-  const ComponentClass = getReactComponent(Component);
-  if (ComponentClass) {
-    name = ComponentClass.displayName || ComponentClass.name;
-  } else if (typeof Component === 'function') {
-    // This is a stateless functional component.
-    name = Component.displayName || Component.name || 'StatelessComponent';
-  } else {
-    name = 'ReactElement';
-  }
-  return name;
-}
-
 function getContainerName(Component: ReactClass<any>): string {
   return 'Relay(' + getComponentName(Component) + ')';
 }
@@ -1139,10 +1117,7 @@ function validateFragmentProp(
     fragment
   ) || (
     !!prevVariables &&
-    RelayContainerComparators.areQueryVariablesEqual(
-      prevVariables,
-      fragment.getVariables()
-    )
+    areEqual(prevVariables, fragment.getVariables())
   );
   if (!hasFragmentData) {
     const variables = fragment.getVariables();

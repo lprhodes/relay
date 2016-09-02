@@ -8,6 +8,7 @@ type Root {
   checkinSearchQuery(query: CheckinSearchInput): CheckinSearchResult
   defaultSettings: Settings,
   route(waypoints: [WayPoint!]!): Route
+  maybeNode: MaybeNode
   me: User
   node(id: ID): Node
   nodes(ids: [ID!]): [Node]
@@ -18,6 +19,17 @@ type Root {
   usernames(names: [String!]!): [Actor]
   viewer: Viewer
   _mutation: Mutation
+}
+
+union MaybeNode = Story | FakeNode | NonNode
+
+type FakeNode {
+  id: ID!
+}
+
+type NonNode {
+  id: String
+  name: String
 }
 
 type Task {
@@ -486,6 +498,8 @@ type PhotoStory implements FeedUnit Node {
 }
 
 type Story implements FeedUnit Node {
+  attachments: [StoryAttachment]
+
   # FeedUnit
   canViewerDelete: Boolean
   seenState: String
@@ -526,6 +540,11 @@ type Story implements FeedUnit Node {
   websites: [String]
   username: String
   viewerSavedState: String
+}
+
+type StoryAttachment {
+  target: Story
+  styleList: [String]
 }
 
 type StreetAddress {
