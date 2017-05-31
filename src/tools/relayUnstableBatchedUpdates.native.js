@@ -11,13 +11,13 @@
 
 'use strict';
 
-const ReactNative = require('react-native');
+const ReactNative = require('ReactNative');
 let batchedUpdates = undefined;
 
 if (ReactNative.unstable_batchedUpdates) {
   batchedUpdates = ReactNative.unstable_batchedUpdates;
 } else {
-  const Renderer = require('react-native/Libraries/Renderer/src/renderers/native/ReactNative');
+  const Renderer = require('ReactNative/Libraries/Renderer/src/renderers/native/ReactNative');
   batchedUpdates = Renderer.unstable_batchedUpdates;
 }
 
